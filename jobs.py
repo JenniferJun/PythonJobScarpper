@@ -26,7 +26,7 @@ def get_request_response(url):
 def get_playwright(url): 
     p = sync_playwright().start()
     browser = p.chromium.launch(
-        headless=True,
+        headless=False,
         args=['--no-sandbox', '--disable-setuid-sandbox']
     )
     page = browser.new_page()
