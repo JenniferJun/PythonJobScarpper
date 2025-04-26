@@ -196,6 +196,4 @@ def search_weworkremotely(skill):
     s_soup = get_playwright(f"{base_url}{skill}")
     o_jobs = parsing_weworkremotely(s_soup)
     return o_jobs
-
-
-print(search_weworkremotely("python"))
+ 
