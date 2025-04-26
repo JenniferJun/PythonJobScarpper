@@ -9,14 +9,19 @@ import sys
 app = Flask(__name__)
 db = {}
 
+
 # Install Playwright browsers if not already installed
 def install_playwright():
     try:
-        subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
-        subprocess.run([sys.executable, "-m", "playwright", "install-deps"], check=True)
+        subprocess.run(
+            [sys.executable, "-m", "playwright", "install", "chromium"],
+            check=True)
+        subprocess.run([sys.executable, "-m", "playwright", "install-deps"],
+                       check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error installing Playwright: {e}")
         # Continue anyway, we'll handle the error in the actual usage
+
 
 # Install Playwright on startup
 install_playwright()
@@ -38,12 +43,17 @@ def search():
             "jobs_web3": jobs_web3,
             "jobs_weworkremotely": jobs_weworkremotely
         }
-    jobs_weworkremotely = []
-    return render_template("search.html", keyword=keyword, jobs_berlinstartup=jobs_berlinstartup, jobs_web3=jobs_web3, jobs_weworkremotely=jobs_weworkremotely)
+    return render_template("search.html",
+                           keyword=keyword,
+                           jobs_berlinstartup=jobs_berlinstartup,
+                           jobs_web3=jobs_web3,
+                           jobs_weworkremotely=jobs_weworkremotely)
+
 
 @app.route("/")
 def hello_world():
     return render_template("home.html", name="Jennifer")
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
