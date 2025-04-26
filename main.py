@@ -4,13 +4,22 @@ from bs4 import BeautifulSoup
 from jobs import search_berlinstartup, search_web3, search_weworkremotely
 import os
 import subprocess
+import sys
 
 app = Flask(__name__)
 db = {}
 
 # Install Playwright browsers if not already installed
-if not os.path.exists("/home/runner/workspace/.cache/ms-playwright"):
-    subprocess.run(["playwright", "install", "chromium"], check=True)
+def install_playwright():
+    try:
+        subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+        subprocess.run([sys.executable, "-m", "playwright", "install-deps"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error installing Playwright: {e}")
+        # Continue anyway, we'll handle the error in the actual usage
+
+# Install Playwright on startup
+install_playwright()
 
 @app.route("/")
 def hello_world():

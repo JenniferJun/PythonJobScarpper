@@ -24,21 +24,33 @@ def get_request_response(url):
   
 
 def get_playwright(url): 
-    p = sync_playwright().start()
-    browser = p.chromium.launch(
-        headless=False,
-        args=['--no-sandbox', '--disable-setuid-sandbox']
-    )
-    page = browser.new_page()
-    page.goto(url)
-    content = page.content()
-    browser.close()
-    p.stop()
-    soup = BeautifulSoup(content, "html.parser")
-    return soup
- 
- 
- 
+    max_retries = 3
+    retry_count = 0
+    
+    while retry_count < max_retries:
+        try:
+            p = sync_playwright().start()
+            browser = p.chromium.launch(
+                headless=True,
+                args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+            )
+            page = browser.new_page()
+            page.goto(url)
+            content = page.content()
+            browser.close()
+            p.stop()
+            soup = BeautifulSoup(content, "html.parser")
+            return soup
+        except Exception as e:
+            retry_count += 1
+            if retry_count == max_retries:
+                print(f"Failed to initialize Playwright after {max_retries} attempts: {e}")
+                # Fallback to requests if Playwright fails
+                response = get_request_response(url)
+                return BeautifulSoup(response.content, "html.parser")
+            print(f"Attempt {retry_count} failed, retrying...")
+            time.sleep(1)  # Wait a bit before retrying
+
 def parsing_berlinstartup(soup_content):
     jobs_list = soup_content.find("ul", class_="jobs-list-items").find_all("li", class_="bjs-jlid")
 
