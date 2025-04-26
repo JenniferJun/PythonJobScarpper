@@ -21,10 +21,6 @@ def install_playwright():
 # Install Playwright on startup
 install_playwright()
 
-@app.route("/")
-def hello_world():
-    return render_template("home.html", name="Jennifer")
-
 
 @app.route("/search")
 def search():
@@ -42,8 +38,12 @@ def search():
             "jobs_web3": jobs_web3,
             "jobs_weworkremotely": jobs_weworkremotely
         }
- 
+    jobs_weworkremotely = []
     return render_template("search.html", keyword=keyword, jobs_berlinstartup=jobs_berlinstartup, jobs_web3=jobs_web3, jobs_weworkremotely=jobs_weworkremotely)
+
+@app.route("/")
+def hello_world():
+    return render_template("home.html", name="Jennifer")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
