@@ -1,3 +1,0 @@
-run = "python main.py"
-hidden = [".config", "package.json", "package-lock.json"]
-nix = "pkgs.python39" 
