@@ -24,13 +24,16 @@ def get_request_response(url):
   
 
 def get_playwright(url): 
-    
     p = sync_playwright().start()
-    browser = p.chromium.launch(headless=True)
+    browser = p.chromium.launch(
+        headless=True,
+        args=['--no-sandbox', '--disable-setuid-sandbox']
+    )
     page = browser.new_page()
     page.goto(url)
-    #time.sleep(2)
     content = page.content()
+    browser.close()
+    p.stop()
     soup = BeautifulSoup(content, "html.parser")
     return soup
  

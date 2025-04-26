@@ -2,8 +2,16 @@ from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from jobs import search_berlinstartup, search_web3, search_weworkremotely
+import os
+import subprocess
+
 app = Flask(__name__)
 db = {}
+
+# Install Playwright browsers if not already installed
+if not os.path.exists("/home/runner/workspace/.cache/ms-playwright"):
+    subprocess.run(["playwright", "install", "chromium"], check=True)
+
 @app.route("/")
 def hello_world():
     return render_template("home.html", name="Jennifer")
