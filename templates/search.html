@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Search Results for: " {{ keyword }} "</h1>
+
+      <form action="/search" method="get">
+        <input
+          type="text"
+          value="{{keyword}}"
+          name="keyword"
+          placeholder="Enter job keyword"
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <h2>
+        Jobs in
+        <a
+          href="https://berlinstartupjobs.com/skill-areas/{{keyword}}/"
+          target="_blank"
+          >berlinstartup.com</a
+        >
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Job Title</th>
+            <th scope="col">Company</th>
+            <th scope="col">Description</th>
+            <th scope="col">Job Skills</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs_berlinstartup %}
+          <tr>
+            <th scope="row">
+              <a href="{{job.title_url}}" target="_blank">{{job.title}}</a>
+            </th>
+            <td>{{job.company}}</td>
+            <td>{{job.description}}</td>
+            <td>
+              {% for skill in job.skills %}
+              <span>
+                <a href="{{ skill.area_link }}" target="_blank"
+                  >{{ skill.area }}</a
+                >
+              </span>
+              | {% endfor %}
+            </td>
+            <td>
+              <a href="{{job.title_url}}" target="_blank">Apply Now</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <h2>
+        Jobs in
+        <a href="https://web3.career/{{keyword}}-jobs" target="_blank"
+          >web3.career</a
+        >
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Job Title</th>
+            <th scope="col">Company & Location</th>
+            <th scope="col">Job Skills</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        {% for job in jobs_web3 %}
+        <tr>
+          <th scope="row">
+            <a href="{{job.title_url}}" target="_blank">{{job.title}}</a>
+          </th>
+          <td>{{job.description}}</td>
+          <td>
+            {% for skill in job.skills %}
+            <span>
+              <a href="{{ skill.href }}" target="_blank">{{ skill.text }}</a>
+            </span>
+            {% endfor %}
+          </td>
+          <td>
+            <a href="{{job.title_url}}" target="_blank">Apply Now</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+      <h2>
+        Jobs in
+        <a
+          href="https://weworkremotely.com/remote-jobs/search?utf8=%E2%9C%93&term={{keyword}}"
+          target="_blank"
+          >weworkremotely.com</a
+        >
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Job Title</th>
+            <th scope="col">Company</th>
+            <th scope="col">Keywords</th>
+            <th scope="col">Link</th>
+          </tr>
+        </thead>
+        {% for job in jobs_weworkremotely %}
+        <tr>
+          <th scope="row">
+            <a href="{{job.title_url}}" target="_blank">{{job.title}}</a>
+          </th>
+          <td>{{job.company}}</td>
+          <td>{{job.description}}</td>
+          <td>
+            <a href="{{job.title_url}}" target="_blank">Apply Now</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <a href="/">Back to Home</a>
+    </main>
+  </body>
+</html>

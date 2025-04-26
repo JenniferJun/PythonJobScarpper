@@ -1,28 +1,32 @@
-from flask import Flask
+from flask import Flask, render_template, request
 import requests
 from bs4 import BeautifulSoup
-
+from jobs import search_berlinstartup, search_web3, search_weworkremotely
 app = Flask(__name__)
-
-"""
-Do this when scraping a website to avoid getting blocked.
-
-headers = {
-      'User-Agent':
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      'Accept':
-      'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.5',
-}
-
-response = requests.get(URL, headers=headers)
-"""
-
-
+db = {}
 @app.route("/")
 def hello_world():
-    return "Hello, World!"
+    return render_template("home.html", name="Jennifer")
 
+
+@app.route("/search")
+def search():
+    keyword = request.args.get("keyword")
+    if keyword in db:
+        jobs_berlinstartup = db[keyword]["jobs_berlinstartup"]
+        jobs_web3 = db[keyword]["jobs_web3"]
+        jobs_weworkremotely = db[keyword]["jobs_weworkremotely"]
+    else:
+        jobs_berlinstartup = search_berlinstartup(keyword)
+        jobs_web3 = search_web3(keyword)
+        jobs_weworkremotely = search_weworkremotely(keyword)
+        db[keyword] = {
+            "jobs_berlinstartup": jobs_berlinstartup,
+            "jobs_web3": jobs_web3,
+            "jobs_weworkremotely": jobs_weworkremotely
+        }
+ 
+    return render_template("search.html", keyword=keyword, jobs_berlinstartup=jobs_berlinstartup, jobs_web3=jobs_web3, jobs_weworkremotely=jobs_weworkremotely)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080)
